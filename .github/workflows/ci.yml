@@ -60,7 +60,7 @@ jobs:
       - name: Integration test
         run: pytest -m integration -v
       - name: Upload synthetic outputs (watermarked, for review only)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: synthetic-smoke-test-outputs
           path: data/synthetic/outputs
