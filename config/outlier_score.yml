@@ -1,0 +1,95 @@
+# Peer-adjusted outlier score specification.
+#
+# Every feature is oriented so that HIGHER = MORE UNUSUAL IN THE RISK DIRECTION.
+#
+# Temporal design (docs/decisions/0007-temporal-holdout-for-the-score.md):
+#   development: first exclusion before `weighting.split_date`; used ONLY to
+#                learn feature weights and to choose between the candidates
+#   test:        first exclusion on or after the split date; never used for
+#                fitting or choosing; the headline lift is measured here
+#
+# transform:
+#   logit    - proportions in [0, 1]; clipped to [eps, 1 - eps] first
+#   log      - strictly positive quantities
+#   log1p    - non-negative quantities with many zeros (e.g. payments)
+#   identity - use as is
+
+peer_group_column: peer_group_id
+
+features:
+  - name: brand_fill_share
+    column: brand_fill_share
+    transform: logit
+    weight: 1.0
+    rationale: Brand-name share of 30-day fills.
+  - name: multisource_brand_share
+    column: multisource_brand_share
+    transform: logit
+    weight: 1.0
+    rationale: Brand share among drugs where a generic equivalent was dispensed nationally.
+  - name: cost_per_fill
+    column: cost_per_fill
+    transform: log
+    weight: 1.0
+    rationale: Gross drug cost per 30-day fill.
+  - name: cost_per_beneficiary
+    column: cost_per_beneficiary
+    transform: log
+    weight: 1.0
+    rationale: Gross drug cost per unique beneficiary.
+  - name: fills_per_beneficiary
+    column: fills_per_beneficiary
+    transform: log
+    weight: 1.0
+    rationale: Prescription intensity per beneficiary.
+  - name: total_fills
+    column: total_30day_fills
+    transform: log
+    weight: 1.0
+    rationale: Overall prescribing volume relative to peers.
+  - name: opioid_claim_share
+    column: opioid_claim_share
+    transform: logit
+    weight: 1.0
+    rationale: Opioid claims as a share of all claims.
+  - name: opioid_long_acting_share
+    column: opioid_long_acting_share
+    transform: logit
+    weight: 1.0
+    rationale: Long-acting opioids as a share of opioid claims.
+  - name: industry_payments
+    column: total_payment_usd
+    transform: log1p
+    weight: 1.0
+    rationale: Total industry general payments received in the program year.
+
+# Beneficiary case-mix controls. Each metric is regressed on these within
+# peer group (fixed effects) and the residual is what gets scored.
+controls:
+  - bene_avg_risk_score
+  - bene_avg_age
+  - dual_eligible_share
+  - lis_claim_share
+  - female_share
+  - is_rural
+
+settings:
+  logit_eps: 0.005
+  z_cap: 8.0          # cap on each feature's robust z before averaging
+  # Drop a feature if fewer than this share of the cohort has it. Long-acting
+  # opioid share only exists for opioid prescribers, so this is set low; a
+  # missing value scores as neutral (z = 0), never as risky.
+  min_feature_coverage: 0.25
+
+weighting:
+  split_date: "2024-01-01"      # dev = 2022-2023 exclusions, test = 2024 onward
+  l2_penalty: 1.0               # on standardized features
+  # Candidates: equal_weights (mean of clipped z) and learned_weights
+  # (non-negative logistic regression on dev). Chosen by this dev metric.
+  selection_metric: average_precision
+
+evaluation:
+  top_k: [0.001, 0.005, 0.01, 0.02, 0.05, 0.10, 0.20]
+  headline_k: 0.01
+  bootstrap_reps: 1000
+  seed: 20210101
