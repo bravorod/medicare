@@ -1,0 +1,172 @@
+{
+  "generated_at": "2026-09-24T22:29:30+00:00",
+  "target": "duckdb",
+  "is_synthetic": false,
+  "data_year": 2021,
+  "n_cohort": 671051,
+  "features_used": [
+    "brand_fill_share",
+    "multisource_brand_share",
+    "cost_per_fill",
+    "cost_per_beneficiary",
+    "fills_per_beneficiary",
+    "total_fills",
+    "opioid_claim_share",
+    "opioid_long_acting_share",
+    "industry_payments"
+  ],
+  "features_dropped": [],
+  "learned_weights": {
+    "weights": {
+      "brand_fill_share": 0.042959731646994646,
+      "multisource_brand_share": 0.0,
+      "cost_per_fill": 0.015140610483766734,
+      "cost_per_beneficiary": 0.0,
+      "fills_per_beneficiary": 0.309919481506739,
+      "total_fills": 0.0,
+      "opioid_claim_share": 0.03062701964225093,
+      "opioid_long_acting_share": 0.19013261407823145,
+      "industry_payments": 0.1338182401961126
+    },
+    "standardized_weights": {
+      "brand_fill_share": 0.03637831689878077,
+      "multisource_brand_share": 0.0,
+      "cost_per_fill": 0.016088044281086893,
+      "cost_per_beneficiary": 0.0,
+      "fills_per_beneficiary": 0.18885745796132933,
+      "total_fills": 0.0,
+      "opioid_claim_share": 0.02520430203852859,
+      "opioid_long_acting_share": 0.117853946255651,
+      "industry_payments": 0.06716249138962316
+    },
+    "intercept": -8.628211838236249,
+    "n": 671051,
+    "n_events": 161,
+    "l2_penalty": 1.0,
+    "converged": true
+  },
+  "lift": {
+    "design": {
+      "split_date": "2024-01-01",
+      "dev_events": 161,
+      "test_events": 389,
+      "test_population": 670890,
+      "test_window_end": "2026-07-31"
+    },
+    "headline_k": 0.01,
+    "selected_score": "learned_weights",
+    "headline": {
+      "k": 0.01,
+      "n": 670890,
+      "n_flagged": 6709,
+      "events_total": 389,
+      "events_captured": 16,
+      "capture_share": 0.04113110539845758,
+      "expected_share": 0.010000149055731938,
+      "lift": 4.113049232489374,
+      "precision": 0.002384856163362647,
+      "base_rate": 0.0005798267972394878
+    },
+    "headline_ci95": [
+      2.3807755074078383,
+      6.249906841556118
+    ],
+    "bootstrap_reps": 1000,
+    "test_by_score": {
+      "learned_weights": {
+        "k": 0.01,
+        "n": 670890,
+        "n_flagged": 6709,
+        "events_total": 389,
+        "events_captured": 16,
+        "capture_share": 0.04113110539845758,
+        "expected_share": 0.010000149055731938,
+        "lift": 4.113049232489374,
+        "precision": 0.002384856163362647,
+        "base_rate": 0.0005798267972394878
+      },
+      "equal_weights": {
+        "k": 0.01,
+        "n": 670890,
+        "n_flagged": 6709,
+        "events_total": 389,
+        "events_captured": 10,
+        "capture_share": 0.02570694087403599,
+        "expected_share": 0.010000149055731938,
+        "lift": 2.5706557703058586,
+        "precision": 0.0014905351021016545,
+        "base_rate": 0.0005798267972394878
+      },
+      "unadjusted": {
+        "k": 0.01,
+        "n": 670890,
+        "n_flagged": 6709,
+        "events_total": 389,
+        "events_captured": 6,
+        "capture_share": 0.015424164524421594,
+        "expected_share": 0.010000149055731938,
+        "lift": 1.5423934621835151,
+        "precision": 0.0008943210612609927,
+        "base_rate": 0.0005798267972394878
+      }
+    },
+    "unadjusted_headline": {
+      "k": 0.01,
+      "n": 670890,
+      "n_flagged": 6709,
+      "events_total": 389,
+      "events_captured": 6,
+      "capture_share": 0.015424164524421594,
+      "expected_share": 0.010000149055731938,
+      "lift": 1.5423934621835151,
+      "precision": 0.0008943210612609927,
+      "base_rate": 0.0005798267972394878
+    },
+    "discrimination": {
+      "auroc": 0.6148328007148121,
+      "average_precision": 0.0011086817045216995,
+      "base_rate": 0.0005798267972394878
+    },
+    "discrimination_unadjusted": {
+      "auroc": 0.579135829709871,
+      "average_precision": 0.0009027210619338302,
+      "base_rate": 0.0005798267972394878
+    },
+    "events_total": 389,
+    "median_days_to_exclusion_captured": 1190.5,
+    "selection_metric": "average_precision",
+    "dev_by_score": {
+      "learned_weights": {
+        "auroc": 0.5468722830310974,
+        "average_precision": 0.0004361519139846307,
+        "base_rate": 0.0002399221519675852,
+        "lift_at_k": 3.726435970979323
+      },
+      "equal_weights": {
+        "auroc": 0.5436503924655939,
+        "average_precision": 0.00034012020558723193,
+        "base_rate": 0.0002399221519675852,
+        "lift_at_k": 3.105363309149436
+      },
+      "unadjusted": {
+        "auroc": 0.5765053124481255,
+        "average_precision": 0.00033716089329363614,
+        "base_rate": 0.0002399221519675852,
+        "lift_at_k": 2.4842906473195483
+      }
+    }
+  },
+  "brand_effect": {
+    "term": "industry_paid",
+    "rate_ratio": 1.1308976216803344,
+    "ci_low": 1.1154371369054559,
+    "ci_high": 1.1465723960655958,
+    "p_value": 1.1018034660985247e-68,
+    "n": 671051,
+    "n_exposed": 319128,
+    "n_clusters": 1918,
+    "pct_more": 13.089762168033436,
+    "pct_ci_low": 11.543713690545587,
+    "pct_ci_high": 14.65723960655958
+  }
+}

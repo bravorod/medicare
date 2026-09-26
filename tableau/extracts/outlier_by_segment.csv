@@ -1,0 +1,154 @@
+dimension,dimension_value,n_prescribers,n_top_1pct,n_later_exclusions,n_exclusions_in_top_1pct,share_top_1pct
+prescriber_specialty,Dentist,23217,8.0,20.0,0.0,0.00034457509583494855
+prescriber_specialty,Ophthalmology,16517,2.0,5.0,0.0,0.00012108736453351092
+prescriber_specialty,Neurology,11693,112.0,6.0,1.0,0.00957838022748653
+prescriber_specialty,Nurse Practitioner,130497,1255.0,62.0,2.0,0.009617079319831107
+prescriber_specialty,Dermatology,10866,10.0,1.0,0.0,0.0009203018590097553
+prescriber_specialty,Clinical Cardiac Electrophysiology,2242,0.0,0.0,0.0,0.0
+prescriber_specialty,Gastroenterology,12569,59.0,3.0,1.0,0.004694088630758215
+prescriber_specialty,Podiatry,8258,6.0,9.0,0.0,0.0007265681763138775
+prescriber_specialty,Pulmonary Disease,8086,56.0,1.0,0.0,0.006925550333910463
+prescriber_specialty,Medical Oncology,2660,4.0,0.0,0.0,0.0015037593984962407
+prescriber_specialty,General Surgery,5154,162.0,5.0,1.0,0.03143189755529686
+prescriber_specialty,Student in an Organized Health Care Education/Training Program,10001,37.0,0.0,0.0,0.0036996300369963003
+prescriber_specialty,Allergy/ Immunology,3112,3.0,1.0,0.0,0.0009640102827763496
+prescriber_specialty,Sleep Medicine,375,10.0,0.0,0.0,0.02666666666666667
+prescriber_specialty,Geriatric Psychiatry,160,0.0,0.0,0.0,0.0
+prescriber_specialty,Pain Medicine,49,2.0,0.0,0.0,0.04081632653061224
+prescriber_specialty,Licensed Practical Nurse,14,0.0,0.0,0.0,0.0
+prescriber_specialty,Interventional Pain Management,1393,4.0,10.0,0.0,0.002871500358937545
+prescriber_specialty,Cardiology,17992,12.0,10.0,0.0,0.0006669630947087594
+prescriber_specialty,Orthopedic Surgery,12508,61.0,3.0,1.0,0.004876878797569556
+prescriber_specialty,Endocrinology,5926,9.0,5.0,0.0,0.0015187310158623017
+prescriber_specialty,Neurosurgery,1360,16.0,1.0,0.0,0.011764705882352941
+prescriber_specialty,Micrographic Dermatologic Surgery,272,0.0,0.0,0.0,0.0
+prescriber_specialty,Oral Surgery (Dentist only),4059,7.0,4.0,0.0,0.0017245627001724563
+prescriber_specialty,Certified Clinical Nurse Specialist,1439,1.0,2.0,0.0,0.0006949270326615705
+prescriber_specialty,Pain Management,2200,12.0,11.0,0.0,0.005454545454545455
+prescriber_specialty,Pediatric Medicine,1178,19.0,2.0,0.0,0.016129032258064516
+prescriber_specialty,Anesthesiology,2414,19.0,9.0,0.0,0.007870753935376968
+prescriber_specialty,Vascular Surgery,2003,2.0,1.0,0.0,0.000998502246630055
+prescriber_specialty,Thoracic Surgery,309,7.0,1.0,0.0,0.022653721682847898
+prescriber_specialty,Interventional Radiology,140,2.0,0.0,0.0,0.014285714285714285
+prescriber_specialty,Addiction Medicine,235,7.0,2.0,0.0,0.029787234042553193
+prescriber_specialty,Family Medicine,347,6.0,1.0,0.0,0.01729106628242075
+prescriber_specialty,Maxillofacial Surgery,692,0.0,0.0,0.0,0.0
+prescriber_specialty,"Psychologist, Clinical",100,0.0,0.0,0.0,0.0
+prescriber_specialty,Undersea and Hyperbaric Medicine,45,0.0,0.0,0.0,0.0
+prescriber_specialty,Certified Registered Nurse Anesthetist (CRNA),49,0.0,0.0,0.0,0.0
+prescriber_specialty,Undefined Physician type,105,0.0,0.0,0.0,0.0
+prescriber_specialty,Plastic Surgery,66,0.0,0.0,0.0,0.0
+prescriber_specialty,Clinic/Center,49,0.0,0.0,0.0,0.0
+prescriber_specialty,Neurological Surgery,21,3.0,0.0,0.0,0.14285714285714285
+prescriber_specialty,Dental Hygienist,41,0.0,0.0,0.0,0.0
+prescriber_specialty,Personal Emergency Response Attendant,12,0.0,1.0,0.0,0.0
+prescriber_specialty,Internal Medicine,79971,749.0,89.0,5.0,0.009365895136987159
+prescriber_specialty,Otolaryngology,6852,11.0,6.0,0.0,0.0016053706946876824
+prescriber_specialty,Radiation Oncology,1371,6.0,1.0,0.0,0.00437636761487965
+prescriber_specialty,Hematology-Oncology,7437,2.0,3.0,0.0,0.0002689256420599704
+prescriber_specialty,Colorectal Surgery (Proctology),662,4.0,0.0,0.0,0.006042296072507553
+prescriber_specialty,Family Practice,90385,484.0,135.0,2.0,0.005354870830336892
+prescriber_specialty,Nephrology,8231,31.0,1.0,0.0,0.003766249544405297
+prescriber_specialty,Psychiatry & Neurology,5794,12.0,8.0,0.0,0.0020711080428028996
+prescriber_specialty,Urology,9039,7.0,2.0,0.0,0.0007744219493306782
+prescriber_specialty,Hospitalist,6192,187.0,0.0,0.0,0.030200258397932816
+prescriber_specialty,Physical Medicine and Rehabilitation,5313,147.0,10.0,0.0,0.02766798418972332
+prescriber_specialty,Emergency Medicine,12022,730.0,16.0,8.0,0.06072200964897687
+prescriber_specialty,Naturopath,224,1.0,0.0,0.0,0.004464285714285714
+prescriber_specialty,Hand Surgery,704,1.0,0.0,0.0,0.0014204545454545455
+prescriber_specialty,Certified Nurse Midwife,246,0.0,0.0,0.0,0.0
+prescriber_specialty,Preventive Medicine,249,9.0,2.0,0.0,0.03614457831325301
+prescriber_specialty,Specialist,482,14.0,3.0,0.0,0.029045643153526972
+prescriber_specialty,Registered Nurse,299,2.0,0.0,0.0,0.006688963210702341
+prescriber_specialty,Surgery,13,0.0,0.0,0.0,0.0
+prescriber_specialty,Legal Medicine,31,0.0,0.0,0.0,0.0
+prescriber_specialty,Nuclear Medicine,55,0.0,0.0,0.0,0.0
+prescriber_specialty,Adult Congenital Heart Disease,24,0.0,0.0,0.0,0.0
+prescriber_specialty,Clinic or Group Practice,16,1.0,0.0,0.0,0.0625
+prescriber_specialty,General Acute Care Hospital,15,0.0,0.0,0.0,0.0
+prescriber_specialty,Obstetrics & Gynecology,12251,37.0,13.0,0.0,0.003020161619459636
+prescriber_specialty,Physician Assistant,60373,2072.0,19.0,1.0,0.03431997747337386
+prescriber_specialty,Optometry,15029,0.0,1.0,0.0,0.0
+prescriber_specialty,Rheumatology,4892,22.0,3.0,0.0,0.004497138184791497
+prescriber_specialty,General Practice,5855,54.0,25.0,0.0,0.009222886421861656
+prescriber_specialty,Plastic and Reconstructive Surgery,752,3.0,0.0,0.0,0.003989361702127659
+prescriber_specialty,Critical Care (Intensivists),1000,7.0,2.0,0.0,0.007
+prescriber_specialty,Psychiatry,17526,54.0,30.0,0.0,0.0030811365970558027
+prescriber_specialty,Interventional Cardiology,3997,0.0,0.0,0.0,0.0
+prescriber_specialty,Sports Medicine,734,34.0,0.0,0.0,0.04632152588555858
+prescriber_specialty,Geriatric Medicine,1716,1.0,1.0,0.0,0.0005827505827505828
+prescriber_specialty,Pharmacist,2040,1.0,0.0,0.0,0.0004901960784313725
+prescriber_specialty,Hospice and Palliative Care,645,1.0,0.0,0.0,0.0015503875968992248
+prescriber_specialty,Infectious Disease,3954,79.0,2.0,0.0,0.01997976732422863
+prescriber_specialty,Osteopathic Manipulative Medicine,347,9.0,0.0,0.0,0.025936599423631124
+prescriber_specialty,Pathology,61,0.0,1.0,0.0,0.0
+prescriber_specialty,Cardiac Surgery,196,0.0,0.0,0.0,0.0
+prescriber_specialty,Neuropsychiatry,880,4.0,1.0,0.0,0.004545454545454545
+prescriber_specialty,Hematology,552,1.0,0.0,0.0,0.0018115942028985507
+prescriber_specialty,Advanced Heart Failure and Transplant Cardiology,654,1.0,0.0,0.0,0.0015290519877675841
+prescriber_specialty,Oral & Maxillofacial Surgery,325,0.0,0.0,0.0,0.0
+prescriber_specialty,Diagnostic Radiology,198,7.0,0.0,0.0,0.03535353535353535
+prescriber_specialty,Hematopoietic Cell Transplantation and Cellular Therapy,105,0.0,0.0,0.0,0.0
+prescriber_specialty,Gynecological Oncology,408,1.0,0.0,0.0,0.0024509803921568627
+prescriber_specialty,Surgical Oncology,155,1.0,0.0,0.0,0.0064516129032258064
+prescriber_specialty,Peripheral Vascular Disease,44,0.0,0.0,0.0,0.0
+prescriber_specialty,Orthopaedic Surgery,128,8.0,0.0,0.0,0.0625
+prescriber_specialty,Counselor,27,0.0,0.0,0.0,0.0
+prescriber_state,WI,12558,108.0,8.0,0.0,0.008600095556617296
+prescriber_state,GA,18707,162.0,11.0,0.0,0.008659859945474956
+prescriber_state,UT,4710,60.0,0.0,0.0,0.012738853503184714
+prescriber_state,NC,23022,373.0,9.0,1.0,0.016201893840674136
+prescriber_state,MN,12335,97.0,2.0,0.0,0.007863802188893394
+prescriber_state,KS,5847,80.0,0.0,0.0,0.013682230203523174
+prescriber_state,NM,3903,35.0,3.0,0.0,0.008967460927491674
+prescriber_state,HI,2372,20.0,2.0,0.0,0.008431703204047217
+prescriber_state,AE,26,1.0,0.0,0.0,0.038461538461538464
+prescriber_state,ZZ,49,0.0,0.0,0.0,0.0
+prescriber_state,ME,3708,31.0,4.0,0.0,0.008360302049622438
+prescriber_state,IN,14225,150.0,5.0,1.0,0.01054481546572935
+prescriber_state,FL,46386,393.0,45.0,3.0,0.008472383908938041
+prescriber_state,PR,6125,33.0,10.0,0.0,0.005387755102040816
+prescriber_state,VA,15522,184.0,13.0,1.0,0.011854142507408839
+prescriber_state,IL,24451,237.0,13.0,0.0,0.009692855097951003
+prescriber_state,CT,9242,98.0,5.0,1.0,0.010603765418740533
+prescriber_state,NE,4207,50.0,2.0,0.0,0.01188495364868077
+prescriber_state,ID,3466,42.0,2.0,0.0,0.012117714945181766
+prescriber_state,LA,10588,95.0,13.0,1.0,0.008972421609369096
+prescriber_state,DC,1746,16.0,0.0,0.0,0.009163802978235968
+prescriber_state,WV,4544,38.0,2.0,0.0,0.008362676056338027
+prescriber_state,VT,1436,6.0,0.0,0.0,0.004178272980501393
+prescriber_state,MS,6322,61.0,8.0,0.0,0.009648845302119582
+prescriber_state,AR,6254,39.0,3.0,0.0,0.006236008954269267
+prescriber_state,AP,16,0.0,0.0,0.0,0.0
+prescriber_state,CO,10821,99.0,4.0,0.0,0.009148877183254783
+prescriber_state,WA,14677,158.0,10.0,2.0,0.010765142740342033
+prescriber_state,MA,18277,155.0,4.0,0.0,0.008480604037861793
+prescriber_state,PA,31982,396.0,27.0,0.0,0.012381964855231067
+prescriber_state,NH,3454,34.0,2.0,0.0,0.009843659525188187
+prescriber_state,MD,11723,121.0,7.0,0.0,0.01032159003668003
+prescriber_state,NY,47100,485.0,33.0,1.0,0.01029723991507431
+prescriber_state,WY,1014,14.0,0.0,0.0,0.013806706114398421
+prescriber_state,IA,6547,82.0,2.0,0.0,0.01252482052848633
+prescriber_state,OH,27144,248.0,26.0,2.0,0.009136457412319481
+prescriber_state,TX,43907,275.0,53.0,3.0,0.00626323820803061
+prescriber_state,MO,13054,83.0,14.0,0.0,0.006358204381798682
+prescriber_state,OK,7130,71.0,5.0,0.0,0.009957924263674615
+prescriber_state,AZ,13696,164.0,9.0,0.0,0.01197429906542056
+prescriber_state,RI,2850,35.0,0.0,0.0,0.012280701754385965
+prescriber_state,CA,64934,703.0,85.0,2.0,0.010826377552591863
+prescriber_state,MI,22729,261.0,23.0,0.0,0.011483127282326543
+prescriber_state,ND,1835,18.0,1.0,0.0,0.009809264305177113
+prescriber_state,KY,10631,67.0,14.0,1.0,0.00630232339384818
+prescriber_state,TN,15942,215.0,18.0,1.0,0.013486388157069377
+prescriber_state,NJ,17361,146.0,15.0,1.0,0.00840965382178446
+prescriber_state,AL,9820,88.0,14.0,0.0,0.008961303462321792
+prescriber_state,SC,10676,115.0,4.0,0.0,0.01077182465342825
+prescriber_state,DE,2173,28.0,0.0,0.0,0.012885411872986655
+prescriber_state,OR,8986,97.0,8.0,0.0,0.010794569330068997
+prescriber_state,MT,2351,33.0,4.0,1.0,0.014036580178647383
+prescriber_state,AK,1266,8.0,1.0,0.0,0.00631911532385466
+prescriber_state,NV,4911,71.0,7.0,0.0,0.014457340663815923
+prescriber_state,SD,2091,30.0,0.0,0.0,0.014347202295552367
+prescriber_state,GU,67,1.0,0.0,0.0,0.014925373134328358
+prescriber_state,VI,97,1.0,0.0,0.0,0.010309278350515464
+prescriber_state,XX,20,0.0,0.0,0.0,0.0

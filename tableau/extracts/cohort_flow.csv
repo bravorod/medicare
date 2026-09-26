@@ -1,0 +1,6 @@
+step,description,n_prescribers,remaining_after_step
+1_not_individual,"Removed: organization, not an individual prescriber",2,1287452.0
+2_missing_specialty_or_state,Removed: specialty or state missing,11,1287441.0
+3_below_min_fills,Removed: fewer than 100 30-day fills,616379,671062.0
+4_excluded_before_window,Removed: already excluded by OIG by end of 2021,11,671051.0
+5_analysis_cohort,Analysis cohort,671051,671051.0

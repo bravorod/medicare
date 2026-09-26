@@ -1,0 +1,158 @@
+{
+  "generated_at": "2026-09-24T22:30:02+00:00",
+  "is_synthetic": false,
+  "target": "duckdb",
+  "data_year": 2021,
+  "records": {
+    "total_raw_records": 47960544,
+    "total_raw_records_millions": 47.960544,
+    "by_source": {
+      "part_d_prescriber_drug": 25231862,
+      "part_d_prescriber": 1287454,
+      "open_payments_general": 11558469,
+      "leie_exclusions": 84001,
+      "nppes_providers": 9798758
+    }
+  },
+  "cohort": {
+    "n_prescribers": 671051,
+    "n_industry_paid": 319128,
+    "share_industry_paid": 0.475564450391997,
+    "flow": [
+      {
+        "step": "1_not_individual",
+        "n_prescribers": 2
+      },
+      {
+        "step": "2_missing_specialty_or_state",
+        "n_prescribers": 11
+      },
+      {
+        "step": "3_below_min_fills",
+        "n_prescribers": 616379
+      },
+      {
+        "step": "4_excluded_before_window",
+        "n_prescribers": 11
+      },
+      {
+        "step": "5_analysis_cohort",
+        "n_prescribers": 671051
+      }
+    ]
+  },
+  "brand_prescribing": {
+    "pct_more_brand_fills_peer_adjusted": 14.254533721622952,
+    "pct_more_brand_fills_crude": 25.25503126454607,
+    "pct_more_multisource_brand_fills_peer_adjusted": 19.77225829592324,
+    "brand_share_paid": 0.14291365142427584,
+    "brand_share_unpaid": 0.1140981324114907,
+    "regression_pct_more": 13.089762168033436,
+    "regression_pct_ci95": [
+      11.543713690545587,
+      14.65723960655958
+    ],
+    "regression_p_value": 1.1018034660985247e-68
+  },
+  "savings": {
+    "estimated_savings_usd": 128309806.38069557,
+    "estimated_savings_usd_millions": 128.30980638069556,
+    "net_excess_brand_fills": 16430.9110772207,
+    "n_drugs": 255,
+    "estimated_savings_usd_millions_all_multisource": 565.3379599382715,
+    "share_of_multisource_fills": 0.5422247352949364,
+    "sensitivity": [
+      {
+        "scenario": "Headline: gross cost, full substitution",
+        "brand_rebate_haircut": 0.0,
+        "substitution_realization": 1.0,
+        "estimated_savings_usd": 128309806.38069539,
+        "estimated_savings_usd_millions": 128.3098063806954
+      },
+      {
+        "scenario": "Gross cost, half of excess fills switched",
+        "brand_rebate_haircut": 0.0,
+        "substitution_realization": 0.5,
+        "estimated_savings_usd": 64154903.190347694,
+        "estimated_savings_usd_millions": 64.1549031903477
+      },
+      {
+        "scenario": "Brand cost net of 15% rebates, full substitution",
+        "brand_rebate_haircut": 0.15,
+        "substitution_realization": 1.0,
+        "estimated_savings_usd": 101979996.98748107,
+        "estimated_savings_usd_millions": 101.97999698748107
+      },
+      {
+        "scenario": "Brand cost net of 30% rebates, full substitution",
+        "brand_rebate_haircut": 0.3,
+        "substitution_realization": 1.0,
+        "estimated_savings_usd": 75352928.25367925,
+        "estimated_savings_usd_millions": 75.35292825367925
+      },
+      {
+        "scenario": "Brand cost net of 30% rebates, half switched",
+        "brand_rebate_haircut": 0.3,
+        "substitution_realization": 0.5,
+        "estimated_savings_usd": 37676464.12683962,
+        "estimated_savings_usd_millions": 37.676464126839626
+      },
+      {
+        "scenario": "Upper bound: all multi-source drugs (dosage forms pooled)",
+        "brand_rebate_haircut": 0.0,
+        "substitution_realization": 1.0,
+        "estimated_savings_usd": 565337959.9382689,
+        "estimated_savings_usd_millions": 565.3379599382689
+      }
+    ]
+  },
+  "outlier_score": {
+    "headline_k": 0.01,
+    "lift": 4.113049232489374,
+    "lift_ci95": [
+      2.3807755074078383,
+      6.249906841556118
+    ],
+    "events_captured": 16,
+    "events_total": 389,
+    "capture_share": 0.04113110539845758,
+    "precision": 0.002384856163362647,
+    "base_rate": 0.0005798267972394878,
+    "unadjusted_lift": 1.5423934621835151,
+    "equal_weights_lift": 2.5706557703058586,
+    "learned_weights_lift": 4.113049232489374,
+    "selected_score": "learned_weights",
+    "selection_metric": "average_precision",
+    "design": {
+      "split_date": "2024-01-01",
+      "dev_events": 161,
+      "test_events": 389,
+      "test_population": 670890,
+      "test_window_end": "2026-07-31"
+    },
+    "learned_weights": {
+      "brand_fill_share": 0.042959731646994646,
+      "multisource_brand_share": 0.0,
+      "cost_per_fill": 0.015140610483766734,
+      "cost_per_beneficiary": 0.0,
+      "fills_per_beneficiary": 0.309919481506739,
+      "total_fills": 0.0,
+      "opioid_claim_share": 0.03062701964225093,
+      "opioid_long_acting_share": 0.19013261407823145,
+      "industry_payments": 0.1338182401961126
+    },
+    "auroc": 0.6148328007148121,
+    "average_precision": 0.0011086817045216995,
+    "features_used": [
+      "brand_fill_share",
+      "multisource_brand_share",
+      "cost_per_fill",
+      "cost_per_beneficiary",
+      "fills_per_beneficiary",
+      "total_fills",
+      "opioid_claim_share",
+      "opioid_long_acting_share",
+      "industry_payments"
+    ]
+  }
+}

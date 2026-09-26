@@ -1,0 +1,7 @@
+scenario,brand_rebate_haircut,substitution_realization,estimated_savings_usd,estimated_savings_usd_millions
+"Headline: gross cost, full substitution",0.0,1.0,128309806.38069539,128.3098063806954
+"Gross cost, half of excess fills switched",0.0,0.5,64154903.190347694,64.1549031903477
+"Brand cost net of 15% rebates, full substitution",0.15,1.0,101979996.98748107,101.97999698748107
+"Brand cost net of 30% rebates, full substitution",0.3,1.0,75352928.25367925,75.35292825367925
+"Brand cost net of 30% rebates, half switched",0.3,0.5,37676464.12683962,37.676464126839626
+Upper bound: all multi-source drugs (dosage forms pooled),0.0,1.0,565337959.9382689,565.3379599382689
