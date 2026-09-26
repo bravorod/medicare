@@ -1,0 +1,227 @@
+# Pipeline configuration for the Medicare Part D prescribing risk analysis.
+#
+# Values of the form ${VAR} or ${VAR:-default} are expanded from the environment
+# when the config is loaded (see src/partd_risk/config.py).
+#
+# Column names below are the *normalized* header names: lower-case, with every
+# run of non-alphanumeric characters replaced by a single underscore.
+# e.g. "Provider Last Name (Legal Name)" -> provider_last_name_legal_name
+#
+# required_columns: staging fails fast (with close-match suggestions) if missing.
+# optional_columns: filled with NULL and logged as a warning if missing.
+
+data_year: 2021  # Part D data year == Open Payments program year
+
+paths:
+  downloads: data/raw/downloads
+  parquet: data/raw/parquet
+  duckdb: ${DUCKDB_PATH:-data/warehouse/partd_risk.duckdb}
+  results: reports/results
+  figures: reports/figures
+  tableau_extracts: tableau/extracts
+
+warehouse:
+  raw_schema: partd_raw
+  # dbt writes to <dataset_prefix>_staging, _intermediate, _marts, _reporting.
+  dataset_prefix: ${BQ_DATASET:-partd_risk}
+  bigquery:
+    project: ${GCP_PROJECT:-}
+    location: ${BQ_LOCATION:-US}
+
+sources:
+  part_d_prescriber_drug:
+    description: >-
+      Medicare Part D Prescribers - by Provider and Drug. One row per
+      prescriber NPI x brand name x generic name (rows with <11 claims are
+      suppressed by CMS).
+    publisher: Centers for Medicare & Medicaid Services
+    resolver: cms_data_catalog
+    catalog_title: "Medicare Part D Prescribers - by Provider and Drug"
+    url: null  # set to a direct CSV link to bypass the catalog lookup
+    raw_table: part_d_prescriber_drug
+    required_columns:
+      - prscrbr_npi
+      - prscrbr_state_abrvtn
+      - prscrbr_type
+      - brnd_name
+      - gnrc_name
+      - tot_clms
+      - tot_30day_fills
+      - tot_drug_cst
+    optional_columns:
+      - prscrbr_last_org_name
+      - prscrbr_first_name
+      - prscrbr_city
+      - prscrbr_type_src
+      - tot_day_suply
+      - tot_benes
+
+  part_d_prescriber:
+    description: >-
+      Medicare Part D Prescribers - by Provider. One row per prescriber NPI
+      with utilization totals, brand/generic claim splits, opioid and
+      antipsychotic measures and beneficiary case-mix.
+    publisher: Centers for Medicare & Medicaid Services
+    resolver: cms_data_catalog
+    catalog_title: "Medicare Part D Prescribers - by Provider"
+    url: null
+    raw_table: part_d_prescriber
+    required_columns:
+      - prscrbr_npi
+      - prscrbr_ent_cd
+      - prscrbr_state_abrvtn
+      - prscrbr_type
+      - tot_clms
+      - tot_30day_fills
+      - tot_drug_cst
+      - tot_benes
+    optional_columns:
+      - prscrbr_last_org_name
+      - prscrbr_first_name
+      - prscrbr_crdntls
+      - prscrbr_city
+      - prscrbr_zip5
+      - prscrbr_ruca
+      - tot_day_suply
+      - brnd_tot_clms
+      - brnd_tot_drug_cst
+      - gnrc_tot_clms
+      - gnrc_tot_drug_cst
+      - othr_tot_clms
+      - lis_tot_clms
+      - opioid_tot_clms
+      - opioid_la_tot_clms
+      - opioid_prscrbr_rate
+      - antbtc_tot_clms
+      - antpsyct_ge65_tot_clms
+      - bene_avg_age
+      - bene_dual_cnt
+      - bene_ndual_cnt
+      - bene_feml_cnt
+      - bene_male_cnt
+      - bene_avg_risk_scre
+
+  open_payments_general:
+    description: >-
+      CMS Open Payments General Payment Data. One row per payment or transfer
+      of value from an applicable manufacturer / GPO to a covered recipient.
+    publisher: Centers for Medicare & Medicaid Services (Open Payments)
+    resolver: open_payments_catalog
+    catalog_title: "{year} General Payment Data"
+    url: null
+    zip_member_pattern: '(?i)^(?:.*/)?OP_DTL_GNRL_PGYR\d{4}.*\.csv$'
+    raw_table: open_payments_general
+    required_columns:
+      - record_id
+      - covered_recipient_type
+      - covered_recipient_npi
+      - applicable_manufacturer_or_applicable_gpo_making_payment_id
+      - total_amount_of_payment_usdollars
+      - date_of_payment
+      - nature_of_payment_or_transfer_of_value
+    optional_columns:
+      - covered_recipient_profile_id
+      - covered_recipient_first_name
+      - covered_recipient_last_name
+      - recipient_state
+      - covered_recipient_primary_type_1
+      - covered_recipient_specialty_1
+      - applicable_manufacturer_or_applicable_gpo_making_payment_name
+      - number_of_payments_included_in_total_amount
+      - form_of_payment_or_transfer_of_value
+      - related_product_indicator
+      - indicate_drug_or_biological_or_device_or_medical_supply_1
+      - indicate_drug_or_biological_or_device_or_medical_supply_2
+      - indicate_drug_or_biological_or_device_or_medical_supply_3
+      - indicate_drug_or_biological_or_device_or_medical_supply_4
+      - indicate_drug_or_biological_or_device_or_medical_supply_5
+      - name_of_drug_or_biological_or_device_or_medical_supply_1
+      - name_of_drug_or_biological_or_device_or_medical_supply_2
+      - name_of_drug_or_biological_or_device_or_medical_supply_3
+      - name_of_drug_or_biological_or_device_or_medical_supply_4
+      - name_of_drug_or_biological_or_device_or_medical_supply_5
+      - program_year
+      - dispute_status_for_publication
+
+  leie_exclusions:
+    description: >-
+      HHS-OIG List of Excluded Individuals/Entities (LEIE), current full
+      database. One row per active exclusion.
+    publisher: HHS Office of Inspector General
+    resolver: static
+    url: https://oig.hhs.gov/exclusions/downloadables/UPDATED.csv
+    raw_table: leie_exclusions
+    required_columns:
+      - lastname
+      - firstname
+      - busname
+      - npi
+      - excltype
+      - excldate
+    optional_columns:
+      - midname
+      - general
+      - specialty
+      - city
+      - state
+      - zip
+      - reindate
+      - waiverdate
+      - wvrstate
+
+  nppes_providers:
+    description: >-
+      NPPES National Provider Identifier registry, monthly full replacement
+      file. Only the columns needed for provider profiling are kept.
+    publisher: Centers for Medicare & Medicaid Services (NPPES)
+    resolver: nppes_monthly
+    index_url: https://download.cms.gov/nppes/NPI_Files.html
+    url: null
+    zip_member_pattern: '(?i)^(?:.*/)?npidata_pfile_\d{8}-\d{8}\.csv$'
+    raw_table: nppes_providers
+    required_columns:
+      - npi
+      - entity_type_code
+      - provider_business_practice_location_address_state_name
+      - provider_enumeration_date
+      - healthcare_provider_taxonomy_code_1
+      - healthcare_provider_primary_taxonomy_switch_1
+    optional_columns:
+      - provider_last_name_legal_name
+      - provider_first_name
+      - provider_credential_text
+      - provider_business_practice_location_address_city_name
+      - provider_business_practice_location_address_postal_code
+      - last_update_date
+      - npi_deactivation_reason_code
+      - npi_deactivation_date
+      - npi_reactivation_date
+      - is_sole_proprietor
+      - healthcare_provider_taxonomy_code_2
+      - healthcare_provider_primary_taxonomy_switch_2
+      - healthcare_provider_taxonomy_code_3
+      - healthcare_provider_primary_taxonomy_switch_3
+      - healthcare_provider_taxonomy_code_4
+      - healthcare_provider_primary_taxonomy_switch_4
+      - healthcare_provider_taxonomy_code_5
+      - healthcare_provider_primary_taxonomy_switch_5
+      - healthcare_provider_taxonomy_code_6
+      - healthcare_provider_primary_taxonomy_switch_6
+      - healthcare_provider_taxonomy_code_7
+      - healthcare_provider_primary_taxonomy_switch_7
+      - healthcare_provider_taxonomy_code_8
+      - healthcare_provider_primary_taxonomy_switch_8
+      - healthcare_provider_taxonomy_code_9
+      - healthcare_provider_primary_taxonomy_switch_9
+      - healthcare_provider_taxonomy_code_10
+      - healthcare_provider_primary_taxonomy_switch_10
+      - healthcare_provider_taxonomy_code_11
+      - healthcare_provider_primary_taxonomy_switch_11
+      - healthcare_provider_taxonomy_code_12
+      - healthcare_provider_primary_taxonomy_switch_12
+      - healthcare_provider_taxonomy_code_13
+      - healthcare_provider_primary_taxonomy_switch_13
+      - healthcare_provider_taxonomy_code_14
+      - healthcare_provider_primary_taxonomy_switch_14
+      - healthcare_provider_taxonomy_code_15
+      - healthcare_provider_primary_taxonomy_switch_15

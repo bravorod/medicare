@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.ipynb_checkpoints/
+
+# Environment
+.env
+
+# Data: raw downloads and local warehouses are large and re-creatable
+data/*
+!data/README.md
+
+# dbt
+dbt/target/
+dbt/target_bq/
+dbt/dbt_packages/
+dbt/logs/
+logs/
+.ci-bq-profile/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+dbt/.user.yml
