@@ -77,7 +77,7 @@ jobs:
           cache: pip
       - run: pip install -e ".[dbt,dev]"
       - name: Throwaway compile-only BigQuery profile
-        run: echo "DBT_PROFILES_DIR=$(scripts/ci_bigquery_profile.sh .ci-bq-profile)" >> "$GITHUB_ENV"
+        run: echo "DBT_PROFILES_DIR=$(bash scripts/ci_bigquery_profile.sh .ci-bq-profile)" >> "$GITHUB_ENV"
       - name: dbt compile (bigquery target, nothing executed)
         working-directory: dbt
         run: |
