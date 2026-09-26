@@ -1,0 +1,23 @@
+version: 2
+
+# Tables written back to the warehouse by the Python modeling step
+# (`partd-risk model`). Models in this folder are tagged `post_ml` and are
+# built in a second dbt pass: `dbt build --select tag:post_ml`.
+
+sources:
+  - name: ml
+    description: Outputs of the Python outlier-scoring step.
+    database: "{{ target.database }}"
+    schema: "{{ target.schema }}_ml"
+    config:
+      tags: ["post_ml"]
+    tables:
+      - name: outlier_scores
+        description: >
+          Peer-adjusted outlier score per cohort prescriber, its percentile, the
+          per-feature robust z-scores and the feature that contributes most.
+        columns:
+          - name: npi
+            tests: [unique, not_null]
+          - name: outlier_score
+            tests: [not_null]

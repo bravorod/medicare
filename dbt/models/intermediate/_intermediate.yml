@@ -1,0 +1,114 @@
+version: 2
+
+models:
+  - name: int_part_d__drug_reference
+    description: >
+      National brand vs generic volume and price per 30-day fill for every
+      generic name. `is_multisource` marks drugs where both a brand and a
+      generic version were dispensed; `brand_premium_per_fill` is the gap in
+      average gross cost per fill between the two.
+    columns:
+      - name: generic_name_key
+        tests: [unique, not_null]
+      - name: brand_premium_per_fill
+        description: max(brand cost per fill - generic cost per fill, 0); NULL unless multi-source.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: is_single_brand_equivalent
+        description: >
+          Multi-source and exactly one brand product for the generic name, so
+          the brand-vs-generic price gap compares the same product. Headline
+          savings set.
+      - name: national_brand_share
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1
+
+  - name: int_prescribers__fill_summary
+    description: Per-prescriber brand, generic and multi-source fill totals.
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "brand_fills <= drug_detail_fills + 0.001"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "multisource_brand_fills <= multisource_fills + 0.001"
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+
+  - name: int_payments__prescriber_summary
+    description: Industry general payments per NPI for the matching program year.
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: total_payment_usd
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+
+  - name: int_payments__drug_matched
+    description: NPI x product pairs where a payment named a specific drug or biological.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [npi, brand_name_key]
+
+  - name: int_exclusions__by_npi
+    description: OIG exclusion history per NPI relative to the data year and outcome window.
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "not (excluded_in_window and excluded_before_window)"
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: days_to_window_exclusion
+        description: Days from the end of the data year to the first in-window exclusion.
+
+  - name: int_prescribers__cohort
+    description: >
+      Every Part D prescriber with utilization, payments, exclusions, NPPES
+      profile, the cohort decision and the assigned peer group.
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "peer_group_id is not null"
+          config:
+            where: "in_cohort"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "not excluded_before_window"
+          config:
+            where: "in_cohort"
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: cohort_exclusion_reason
+        description: First cohort rule the prescriber fails; NULL when in the cohort.
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 1_not_individual
+                  - 2_missing_specialty_or_state
+                  - 3_below_min_fills
+                  - 4_excluded_before_window
+      - name: peer_group_level
+        tests:
+          - accepted_values:
+              arguments:
+                values: [specialty_state, specialty_national, all_prescribers]
+      - name: is_industry_paid
+        description: >
+          Received at least one general payment in the program year. By default
+          only drug/biological-related payments count
+          (var `industry_paid_definition`).
+        tests: [not_null]

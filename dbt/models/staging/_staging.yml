@@ -1,0 +1,135 @@
+version: 2
+
+models:
+  - name: stg_part_d__prescriber_drug
+    description: >
+      Typed Part D prescriber x drug rows with a normalized brand/generic key
+      and an `is_brand` flag. Rows without a valid 10-digit NPI are dropped.
+    columns:
+      - name: prescriber_drug_id
+        description: Surrogate key over NPI, brand key and generic key.
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null
+      - name: npi
+        description: Prescriber National Provider Identifier (10 digits).
+        tests: [not_null]
+      - name: brand_name_key
+        description: Upper-cased brand name with punctuation collapsed.
+      - name: generic_name_key
+        description: Upper-cased generic name with punctuation collapsed.
+        tests: [not_null]
+      - name: is_brand
+        description: >
+          True when the normalized brand name is neither the generic name nor
+          the generic name followed by a formulation suffix (ER, HFA, ODT, ...).
+        tests: [not_null]
+      - name: total_30day_fills
+        description: Claims standardized to 30-day supplies (CMS `Tot_30day_Fills`).
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+      - name: total_drug_cost
+        description: >
+          Gross drug cost (ingredient cost, dispensing fee, sales tax, vaccine
+          administration fee) paid by the Part D plan, beneficiary and other
+          payers. Not net of manufacturer rebates.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+
+  - name: stg_part_d__prescriber
+    description: Typed Part D prescriber-level summary with beneficiary case-mix.
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: entity_code
+        description: "`I` = individual, `O` = organization."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["I", "O"]
+              config:
+                severity: warn
+      - name: ruca_code
+        description: Rural-Urban Commuting Area code of the prescriber ZIP.
+      - name: is_rural
+        description: RUCA code 4 or above (micropolitan, small town or rural).
+      - name: bene_avg_risk_score
+        description: Average CMS-HCC risk score of the prescriber's beneficiaries.
+      - name: total_30day_fills
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+
+  - name: stg_open_payments__general_payments
+    description: Typed Open Payments general payments with a drug-related flag.
+    columns:
+      - name: payment_record_id
+        tests: [unique, not_null]
+      - name: npi
+        description: >
+          Covered recipient NPI (populated from program year 2021). NULL for
+          teaching hospitals and for records CMS could not match to an NPI.
+      - name: payment_amount_usd
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+              config:
+                severity: warn
+      - name: is_drug_related
+        description: Any attached product is a drug or biological.
+        tests: [not_null]
+      - name: program_year
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["{{ var('data_year') }}"]
+                quote: false
+              config:
+                severity: warn
+
+  - name: stg_leie__exclusions
+    description: Typed OIG exclusions. Individuals and entities are both kept.
+    columns:
+      - name: exclusion_id
+        tests:
+          - unique:
+              config:
+                severity: warn
+          - not_null
+      - name: exclusion_date
+        tests: [not_null]
+      - name: exclusion_type_code
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('leie_exclusion_types')
+                field: exclusion_type_code
+              config:
+                severity: warn
+
+  - name: stg_nppes__providers
+    description: Typed NPPES registry snapshot, one row per NPI.
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: entity_type_code
+        description: 1 = individual, 2 = organization. NULL for deactivated NPIs.
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2]
+                quote: false
+      - name: primary_taxonomy_code
+        description: NUCC taxonomy code flagged as primary (else slot 1).

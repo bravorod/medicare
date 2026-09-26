@@ -1,0 +1,40 @@
+version: 2
+
+exposures:
+  - name: tableau_prescribing_risk_dashboard
+    label: Part D Prescribing Risk (Tableau)
+    type: dashboard
+    maturity: medium
+    url: https://public.tableau.com/  # replace with the published workbook URL
+    description: >
+      Tableau dashboard for non-technical readers: industry payments vs
+      brand-name prescribing, generic-substitution savings, and the outlier
+      score's capture of later OIG exclusions. Built from the CSV extracts
+      written by `partd-risk export-tableau` (see tableau/README.md).
+    depends_on:
+      - ref('rpt_brand_comparison')
+      - ref('rpt_brand_by_payment_tier')
+      - ref('rpt_savings_by_drug')
+      - ref('rpt_specialty_summary')
+      - ref('rpt_state_summary')
+      - ref('rpt_cohort_flow')
+      - ref('rpt_outlier_by_segment')
+    owner:
+      name: bravorod
+      email: bravorod@users.noreply.github.com
+
+  - name: stakeholder_memo
+    label: Findings memo
+    type: analysis
+    maturity: medium
+    url: https://github.com/bravorod/medicare/blob/main/reports/memo/memo.md
+    description: Plain-language memo rendered from the headline metrics by `partd-risk results`.
+    depends_on:
+      - ref('rpt_brand_comparison')
+      - ref('rpt_savings_summary')
+      - ref('rpt_source_row_counts')
+      - ref('rpt_data_provenance')
+      - ref('mart_outlier_features')
+    owner:
+      name: bravorod
+      email: bravorod@users.noreply.github.com

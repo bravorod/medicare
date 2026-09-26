@@ -1,0 +1,94 @@
+name: partd_risk
+version: "0.1.0"
+config-version: 2
+profile: partd_risk
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+vars:
+  # Part D data year; Open Payments program year is matched to it.
+  data_year: 2021
+  # Outcome window for "later" exclusions starts the day after the data year.
+  # The end is pinned so results reproduce when a newer LEIE file is loaded
+  # (null = through the latest exclusion in the snapshot). See ADR 0007.
+  outcome_window_end: "2026-07-31"
+  # Schema/dataset that holds the raw (all-STRING) extracts.
+  raw_schema: partd_raw
+  # Cohort and peer-group rules (see docs/methodology.md).
+  min_total_fills: 100
+  min_peer_group_size: 25
+  min_reference_peers: 10
+  # A generic name counts as multi-source only if the generic version had at
+  # least this many 30-day fills nationally (guards against name artifacts).
+  min_generic_fills_for_equivalence: 1000
+  # "drug_related": at least one general payment tied to a drug/biological.
+  # "any": any general payment at all.
+  industry_paid_definition: drug_related
+  payment_tier_breaks: [100, 1000, 10000]
+  payment_categories:
+    - food_beverage
+    - speaker_faculty
+    - consulting
+    - travel_lodging
+    - education
+    - gift_entertainment
+    - grant
+    - royalty_license
+    - ownership
+    - other
+
+models:
+  partd_risk:
+    +persist_docs:
+      relation: true
+      columns: true
+    staging:
+      +schema: staging
+      +materialized: view
+      +tags: ["staging"]
+    intermediate:
+      +schema: intermediate
+      +materialized: table
+      +tags: ["intermediate"]
+    marts:
+      +schema: marts
+      +materialized: table
+      core:
+        +tags: ["marts", "core"]
+      analysis:
+        +tags: ["marts", "analysis"]
+    reporting:
+      +schema: reporting
+      +materialized: table
+      +tags: ["reporting"]
+    # Second pass, after `partd-risk model` has written the outlier scores.
+    post_ml:
+      +schema: marts
+      +materialized: table
+      +tags: ["post_ml"]
+
+seeds:
+  partd_risk:
+    +schema: reference
+    +tags: ["reference"]
+    payment_nature_categories:
+      +column_types:
+        nature_of_payment: "{{ 'string' if target.type == 'bigquery' else 'varchar' }}"
+        payment_category: "{{ 'string' if target.type == 'bigquery' else 'varchar' }}"
+    leie_exclusion_types:
+      +column_types:
+        exclusion_type_code: "{{ 'string' if target.type == 'bigquery' else 'varchar' }}"
+    state_regions:
+      +column_types:
+        state_code: "{{ 'string' if target.type == 'bigquery' else 'varchar' }}"
+        state_fips: "{{ 'string' if target.type == 'bigquery' else 'varchar' }}"
+
+tests:
+  partd_risk:
+    +severity: error

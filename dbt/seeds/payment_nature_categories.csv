@@ -1,0 +1,19 @@
+nature_of_payment,payment_category
+Food and Beverage,food_beverage
+Travel and Lodging,travel_lodging
+Education,education
+Consulting Fee,consulting
+"Compensation for services other than consulting, including serving as faculty or as a speaker at a venue other than a continuing education program",speaker_faculty
+Compensation for serving as faculty or as a speaker for an accredited or certified continuing education program,speaker_faculty
+Compensation for serving as faculty or as a speaker for a non-accredited and noncertified continuing education program,speaker_faculty
+Honoraria,speaker_faculty
+Gift,gift_entertainment
+Entertainment,gift_entertainment
+Grant,grant
+Charitable Contribution,other
+Royalty or License,royalty_license
+Current or prospective ownership or investment interest,ownership
+Space rental or facility fees (teaching hospital only),other
+Debt forgiveness,other
+Long term medical supply or device loan,other
+Acquisitions,other

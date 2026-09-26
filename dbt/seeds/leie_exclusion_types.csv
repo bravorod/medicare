@@ -1,0 +1,28 @@
+exclusion_type_code,statute,description,authority,exclusion_theme
+1128a1,1128(a)(1),Conviction of program-related crimes,mandatory,program_fraud
+1128a2,1128(a)(2),Conviction relating to patient abuse or neglect,mandatory,patient_harm
+1128a3,1128(a)(3),Felony conviction relating to health care fraud,mandatory,program_fraud
+1128a4,1128(a)(4),Felony conviction relating to controlled substance,mandatory,controlled_substance
+1128c3gi,1128(c)(3)(G)(i),Conviction of two mandatory exclusion offenses,mandatory,program_fraud
+1128c3gii,1128(c)(3)(G)(ii),Conviction of three or more mandatory exclusion offenses,mandatory,program_fraud
+1128b1,1128(b)(1),Misdemeanor conviction relating to health care fraud,permissive,program_fraud
+1128b2,1128(b)(2),Conviction relating to obstruction of an investigation or audit,permissive,program_fraud
+1128b3,1128(b)(3),Misdemeanor conviction relating to controlled substance,permissive,controlled_substance
+1128b4,1128(b)(4),"License revocation, suspension or surrender",permissive,licensure
+1128b5,1128(b)(5),Exclusion or suspension under a federal or state health care program,permissive,program_sanction
+1128b6,1128(b)(6),Claims for excessive charges or unnecessary services,permissive,billing_quality
+1128b7,1128(b)(7),"Fraud, kickbacks and other prohibited activities",permissive,program_fraud
+1128b8,1128(b)(8),Entities controlled by a sanctioned individual,permissive,ownership_control
+1128b8a,1128(b)(8)(A),Entities controlled by a family or household member of an excluded individual,permissive,ownership_control
+1128b9,1128(b)(9),Failure to disclose required information,permissive,administrative
+1128b10,1128(b)(10),Failure to supply requested information on subcontractors and suppliers,permissive,administrative
+1128b11,1128(b)(11),Failure to supply payment information,permissive,administrative
+1128b12,1128(b)(12),Failure to grant immediate access,permissive,administrative
+1128b13,1128(b)(13),Failure to take corrective action,permissive,administrative
+1128b14,1128(b)(14),Default on health education loan or scholarship obligations,permissive,administrative
+1128b15,1128(b)(15),Individuals controlling a sanctioned entity,permissive,ownership_control
+1128b16,1128(b)(16),Making false statements or misrepresentations of material fact,permissive,program_fraud
+1128aa,1128A(a),Civil monetary penalty,permissive,program_fraud
+1156,1156,Failure to meet statutory obligations of practitioners and providers,permissive,billing_quality
+brchcia,CIA breach,Breach of a Corporate Integrity Agreement,permissive,program_sanction
+brchsa,SA breach,Breach of a Settlement Agreement,permissive,program_sanction

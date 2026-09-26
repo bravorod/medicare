@@ -1,0 +1,43 @@
+version: 2
+
+seeds:
+  - name: payment_nature_categories
+    description: >
+      Maps the Open Payments `Nature_of_Payment_or_Transfer_of_Value` values to
+      the analysis categories used throughout the project. Joined on a
+      lower-cased, trimmed key; unmapped values fall into `other`.
+    columns:
+      - name: nature_of_payment
+        description: Value exactly as published by Open Payments.
+        tests: [unique, not_null]
+      - name: payment_category
+        description: Analysis category.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [food_beverage, speaker_faculty, consulting, travel_lodging, education,
+                         gift_entertainment, grant, royalty_license, ownership, other]
+
+  - name: leie_exclusion_types
+    description: >
+      OIG exclusion authorities (Social Security Act section 1128 and related)
+      with a plain-language description and a theme used to describe which
+      kinds of exclusions the outlier score captures.
+    columns:
+      - name: exclusion_type_code
+        description: Lower-cased EXCLTYPE with spaces removed, e.g. `1128a1`.
+        tests: [unique, not_null]
+      - name: authority
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["mandatory", "permissive"]
+      - name: exclusion_theme
+        tests: [not_null]
+
+  - name: state_regions
+    description: US states, DC and territories with Census region and division.
+    columns:
+      - name: state_code
+        tests: [unique, not_null]

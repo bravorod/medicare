@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: mart_brand_peer_comparison
+    description: >
+      Observed vs expected brand-name fills per cohort prescriber, where
+      expected comes from unpaid peers in the same specialty and state
+      (indirect standardization). Source for the "X% more brand-name fills"
+      headline.
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: reference_level
+        tests:
+          - accepted_values:
+              arguments:
+                values: [specialty_state, specialty_national, all_prescribers]
+      - name: reference_brand_share
+        description: Brand fill share of unpaid peers used as the reference rate.
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1
+      - name: expected_brand_fills
+        description: drug_detail_fills x reference_brand_share.
+      - name: brand_oe_ratio
+        description: brand_fills / expected_brand_fills.
+      - name: payment_profile
+        description: Type of industry relationship (none, meals only, other, speaker/consulting).
+
+  - name: mart_generic_substitution_savings
+    description: >
+      Change in gross Part D drug cost if industry-paid prescribers used brand
+      vs generic versions of each multi-source drug at the rate of unpaid
+      same-specialty peers, at specialty x drug grain. Signed: negative cells
+      (paid prescribers below their peers) offset positive ones.
+    columns:
+      - name: savings_cell_id
+        tests: [unique, not_null]
+      - name: net_excess_brand_fills
+        description: Observed - expected brand fills in the cell (signed, not floored).
+        tests: [not_null]
+      - name: estimated_savings_usd
+        description: net_excess_brand_fills x national brand premium per 30-day fill (signed).
+        tests: [not_null]
+
+  - name: mart_outlier_features
+    description: >
+      Feature table for the peer-adjusted outlier score (Python). One row per
+      cohort prescriber. Exclusion columns are for evaluation only.
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: peer_group_id
+        tests: [not_null]
+      - name: excluded_in_window
+        tests: [not_null]
+
+  - name: mart_drug_matched_prescribing
+    description: >
+      For brands named in industry payments to at least 25 cohort prescribers:
+      observed vs expected fills of that brand among the prescribers paid in
+      connection with it, relative to same-specialty prescribers who were not.
+    columns:
+      - name: brand_name_key
+        tests: [unique, not_null]
+      - name: oe_ratio
+        description: Observed / expected fills of the paid-for brand.

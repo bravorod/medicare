@@ -1,0 +1,88 @@
+version: 2
+
+# Raw extracts are loaded by `partd-risk load` (see src/partd_risk/ingest).
+# Every raw column is STRING; typing happens in the staging models below.
+
+sources:
+  - name: raw
+    description: Raw CMS, Open Payments, OIG and NPPES extracts (all STRING columns).
+    database: "{{ target.database }}"
+    schema: "{{ var('raw_schema') }}"
+    loader: partd-risk (Python)
+    tables:
+      - name: part_d_prescriber_drug
+        description: >
+          Medicare Part D Prescribers - by Provider and Drug (CMS). One row per
+          prescriber NPI x brand name x generic name. Drug rows with fewer than
+          11 claims are suppressed by CMS before publication.
+        config:
+          meta:
+            publisher: CMS
+            grain: prescriber x drug
+            url: https://data.cms.gov/provider-summary-by-type-of-service/medicare-part-d-prescribers/medicare-part-d-prescribers-by-provider-and-drug
+        columns:
+          - name: prscrbr_npi
+            tests: [not_null]
+          - name: gnrc_name
+            tests: [not_null]
+
+      - name: part_d_prescriber
+        description: >
+          Medicare Part D Prescribers - by Provider (CMS). One row per
+          prescriber NPI with totals, brand/generic split, opioid measures and
+          beneficiary demographics / risk score.
+        config:
+          meta:
+            publisher: CMS
+            grain: prescriber
+            url: https://data.cms.gov/provider-summary-by-type-of-service/medicare-part-d-prescribers/medicare-part-d-prescribers-by-provider
+        columns:
+          - name: prscrbr_npi
+            tests: [not_null, unique]
+
+      - name: open_payments_general
+        description: >
+          CMS Open Payments General Payment Data for the program year matching
+          `data_year`. One row per payment / transfer of value.
+        config:
+          meta:
+            publisher: CMS Open Payments
+            grain: payment record
+            url: https://openpaymentsdata.cms.gov/
+        columns:
+          - name: record_id
+            tests: [not_null, unique]
+
+      - name: leie_exclusions
+        description: >
+          HHS-OIG List of Excluded Individuals/Entities, full current database.
+          Reinstated individuals are removed from this file by OIG.
+        config:
+          meta:
+            publisher: HHS-OIG
+            grain: exclusion
+            url: https://oig.hhs.gov/exclusions/exclusions_list.asp
+        columns:
+          - name: excldate
+            tests: [not_null]
+
+      - name: nppes_providers
+        description: NPPES NPI registry, monthly full-replacement file (column subset).
+        config:
+          meta:
+            publisher: CMS NPPES
+            grain: NPI
+            url: https://download.cms.gov/nppes/NPI_Files.html
+        columns:
+          - name: npi
+            tests: [not_null, unique]
+
+      - name: load_provenance
+        description: >
+          One row per raw table written by the loader: source URL, SHA-256 of
+          the downloaded file, row count, load time and an `is_synthetic` flag.
+          The results step refuses to publish headline numbers from synthetic
+          loads.
+        columns:
+          - name: source_name
+            tests: [not_null, unique]

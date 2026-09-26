@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: fct_prescribers
+    description: >
+      One row per Part D prescriber NPI for the data year. Combines Part D
+      utilization, brand/generic fills, Open Payments, OIG exclusions and the
+      NPPES profile, with cohort flags and peer groups. All analysis marts
+      filter to `in_cohort`.
+    columns:
+      - name: npi
+        tests: [unique, not_null]
+      - name: in_cohort
+        description: Passes every cohort rule (see int_prescribers__cohort).
+        tests: [not_null]
+      - name: brand_fill_share
+        description: Brand-name 30-day fills / all 30-day fills (drug-level file).
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1.000001
+      - name: multisource_brand_share
+        description: Brand share among drugs with a nationally dispensed generic equivalent.
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0
+                max_value: 1.000001
+      - name: cms_brand_claim_share
+        description: >
+          Brand share using CMS's own brand/generic classification from the
+          prescriber-level file. Used to validate the name-based classification
+          (analyses/brand_share_vs_cms_classification.sql).
+      - name: cost_per_fill
+        description: Gross drug cost per 30-day fill.
+      - name: opioid_claim_share
+        description: Opioid claims / all claims.
+      - name: payment_tier
+        description: Total general payments bucketed by var `payment_tier_breaks`.
+      - name: excluded_in_window
+        description: >
+          First OIG exclusion falls after the data year (validation outcome).
+          Never used as a model input.
+        tests: [not_null]
+
+  - name: dim_drugs
+    description: Drug dimension at generic-name grain with national pricing.
+    columns:
+      - name: generic_name_key
+        tests: [unique, not_null]

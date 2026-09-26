@@ -1,0 +1,84 @@
+version: 2
+
+models:
+  - name: rpt_brand_comparison
+    description: >
+      Headline table: industry-paid vs not-paid prescribers, crude and
+      peer-adjusted brand-name fill rates. `pct_more_brand_fills_peer_adjusted`
+      on the `industry_paid` row is the resume/README headline.
+    columns:
+      - name: payment_group
+        tests:
+          - unique
+          - accepted_values:
+              arguments:
+                values: [industry_paid, not_industry_paid]
+      - name: brand_oe_ratio
+        description: Sum of observed / sum of expected brand fills.
+      - name: pct_more_brand_fills_peer_adjusted
+        description: (O/E paid / O/E unpaid - 1) x 100.
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "brand_oe_ratio between 0.95 and 1.05"
+          config:
+            where: "payment_group = 'not_industry_paid'"
+            severity: warn
+
+  - name: rpt_brand_by_payment_tier
+    description: Peer-adjusted brand O/E by payment tier and payment profile (dose-response).
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [dimension, dimension_value]
+
+  - name: rpt_savings_summary
+    description: >
+      One-row summary of the generic-substitution savings estimate. Headline
+      columns cover single-brand-product drugs; *_all_multisource columns
+      include every multi-source drug (upper bound).
+    columns:
+      - name: estimated_savings_usd
+        description: Net (signed) savings summed over every specialty x drug cell.
+        tests: [not_null]
+
+  - name: rpt_savings_by_drug
+    description: Savings by multi-source drug; rank and share within the headline set.
+    columns:
+      - name: generic_name_key
+        tests: [unique, not_null]
+
+  - name: rpt_specialty_summary
+    description: Specialty-level payments, brand prescribing, savings and later exclusions.
+    columns:
+      - name: prescriber_specialty
+        tests: [unique, not_null]
+
+  - name: rpt_state_summary
+    description: State-level view for the Tableau map.
+    columns:
+      - name: prescriber_state
+        tests: [unique, not_null]
+
+  - name: rpt_cohort_flow
+    description: CONSORT-style cohort flow.
+    columns:
+      - name: step
+        tests: [unique, not_null]
+
+  - name: rpt_source_row_counts
+    description: Row counts of every raw source table.
+    columns:
+      - name: raw_table
+        tests: [unique, not_null]
+
+  - name: rpt_data_provenance
+    description: Load provenance for every raw table, including the synthetic flag.
+    columns:
+      - name: source_name
+        tests: [unique, not_null]
+      - name: is_synthetic
+        tests: [not_null]
+
+  - name: rpt_exclusion_outcomes
+    description: Later OIG exclusions among cohort prescribers by year and theme.

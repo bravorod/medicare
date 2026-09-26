@@ -1,0 +1,25 @@
+# dbt profile for this project. All secrets come from the environment; see
+# .env.example and docs/runbook_bigquery.md.
+#
+#   DBT_TARGET=bigquery  (default) - production run on BigQuery
+#   DBT_TARGET=duckdb              - local / CI run on a DuckDB file
+partd_risk:
+  target: "{{ env_var('DBT_TARGET', 'bigquery') }}"
+  outputs:
+    bigquery:
+      type: bigquery
+      method: oauth  # `gcloud auth application-default login`
+      project: "{{ env_var('GCP_PROJECT', 'set-gcp-project') }}"
+      dataset: "{{ env_var('BQ_DATASET', 'partd_risk') }}"
+      location: "{{ env_var('BQ_LOCATION', 'US') }}"
+      threads: 8
+      priority: interactive
+      job_execution_timeout_seconds: 1800
+      job_retries: 1
+      maximum_bytes_billed: "{{ env_var('BQ_MAX_BYTES_BILLED', '200000000000') | int }}"
+
+    duckdb:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '../data/warehouse/partd_risk.duckdb') }}"
+      schema: "{{ env_var('BQ_DATASET', 'partd_risk') }}"
+      threads: 4
