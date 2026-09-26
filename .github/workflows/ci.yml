@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install "ruff>=0.5"
+      - run: ruff check src tests scripts
+      - run: ruff format --check src tests scripts
+
+  unit:
+    name: Unit tests (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: pytest -m "not integration" --cov --cov-report=term-missing:skip-covered
+
+  dbt-duckdb:
+    name: dbt build + model on synthetic DuckDB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -e ".[dbt,dev]"
+      - name: dbt deps
+        working-directory: dbt
+        run: dbt deps
+      - name: Synthetic end-to-end (load -> dbt -> model -> post-ML dbt -> report)
+        run: make synthetic-results PY=python
+      - name: Integration test
+        run: pytest -m integration -v
+      - name: Upload synthetic outputs (watermarked, for review only)
+        uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-smoke-test-outputs
+          path: data/synthetic/outputs
+          retention-days: 7
+
+  bigquery-sql:
+    name: Compile + parse BigQuery SQL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+      - run: pip install -e ".[dbt,dev]"
+      - name: Throwaway compile-only BigQuery profile
+        run: echo "DBT_PROFILES_DIR=$(scripts/ci_bigquery_profile.sh .ci-bq-profile)" >> "$GITHUB_ENV"
+      - name: dbt compile (bigquery target, nothing executed)
+        working-directory: dbt
+        run: |
+          dbt deps
+          dbt compile --no-populate-cache --target-path target_bq
+      - name: Parse compiled SQL with the BigQuery dialect
+        run: python scripts/check_bigquery_sql.py dbt/target_bq/compiled/partd_risk
